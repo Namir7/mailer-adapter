@@ -1,4 +1,9 @@
-import { MailerAdapter, SendParams } from "../mailer-adapter";
+import {
+  MailerAdapter,
+  SendMailReturnValue,
+  SendMailStatus,
+  SendParams,
+} from "../mailer-adapter";
 import request from "request";
 
 type Options = {
@@ -15,7 +20,7 @@ export class HttpDriver implements MailerAdapter {
     this._key = options.key;
   }
 
-  sendMail(params: SendParams): void | Promise<void> {
+  sendMail(params: SendParams): Promise<SendMailReturnValue> {
     return new Promise((resolve, reject) => {
       request(
         {
@@ -28,8 +33,12 @@ export class HttpDriver implements MailerAdapter {
           url: this._endpoint,
         },
         (err, _, body) => {
-          resolve(body);
-          reject(err);
+          resolve({
+            status: SendMailStatus.SUCCESS,
+          });
+          reject({
+            status: SendMailStatus.FAILURE,
+          });
         }
       );
     });

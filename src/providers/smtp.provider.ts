@@ -1,4 +1,9 @@
-import { MailerAdapter, SendParams } from "../mailer-adapter";
+import {
+  MailerAdapter,
+  SendMailReturnValue,
+  SendMailStatus,
+  SendParams,
+} from "../mailer-adapter";
 import { createTransport, Transporter } from "nodemailer";
 
 type SmtpDriverOptions = {
@@ -29,7 +34,19 @@ export class SmtpDriver implements MailerAdapter {
     });
   }
 
-  async sendMail(params: SendParams): Promise<void> {
-    this._mailer.sendMail(params);
+  sendMail(params: SendParams): Promise<SendMailReturnValue> {
+    return new Promise((resolve, reject) => {
+      this._mailer.sendMail(params, (err, info) => {
+        if (err) {
+          reject({
+            status: SendMailStatus.FAILURE,
+          });
+        } else {
+          resolve({
+            status: SendMailStatus.SUCCESS,
+          });
+        }
+      });
+    });
   }
 }

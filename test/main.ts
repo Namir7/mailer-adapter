@@ -21,16 +21,19 @@ export const main = async () => {
   const mailer = new Mailer(smtpDriver);
 
   try {
-    await mailer.sendMail({
-      to: ["reciever@mail.com"],
+    const response = await mailer.sendMail({
+      to: ["nalbert2012@ya.ru"],
       subject: "test",
-      replyTo: "reply@mail.com",
-      from: "sender@mail.com",
+      replyTo: "user_3@testsomesthing.com",
+      from: "user_3@testsomesthing.com",
       body: "<b>Hello world?</b>",
     });
-  } catch (e) {
+
+    console.log("response");
+    console.log(response);
+  } catch (err) {
     console.log("error occured");
-    console.log(e);
+    console.log(err);
   }
 };
 
