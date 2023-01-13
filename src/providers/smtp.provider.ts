@@ -1,7 +1,7 @@
 import { MailerAdapter, SendParams } from "../mailer-adapter";
 import { createTransport, Transporter } from "nodemailer";
 
-type Options = {
+type SmtpDriverOptions = {
   host: string;
   port: number;
   mailbox: {
@@ -13,7 +13,7 @@ type Options = {
 export class SmtpDriver implements MailerAdapter {
   private _mailer: Transporter;
 
-  constructor({ host, port, mailbox }: Options) {
+  constructor({ host, port, mailbox }: SmtpDriverOptions) {
     this._mailer = createTransport({
       // https://nodemailer.com/about/
       host,
@@ -22,7 +22,10 @@ export class SmtpDriver implements MailerAdapter {
         user: mailbox.username,
         pass: mailbox.password,
       },
-      secure: false,
+      tls: {
+        rejectUnauthorized: false,
+      },
+      secure: true,
     });
   }
 
